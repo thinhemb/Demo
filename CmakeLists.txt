@@ -1,0 +1,56 @@
+cmake_minimum_required(VERSION 3.0)
+
+# C++ std 11
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_EXE_LINKER_FLAGS "-no-pie")
+
+project(Demo)
+
+find_package(OpenCV REQUIRED)
+#Libevent
+find_library(EVENT_LIBS NAMES event PATHS ${PROJECT_SOURCE_DIR}/libs/event/lib)
+
+# Curl lib
+find_library(CURL_LIBS NAMES curl PATHS ${PROJECT_SOURCE_DIR}/libs/curl/lib)
+
+#Lib Sqlite
+find_library(SQLITE_LIBS NAMES sqlite3 PATHS ${PROJECT_SOURCE_DIR}/libs/sqlite3/lib)
+
+
+
+add_executable(${PROJECT_NAME} 
+            src/backup/backup.cpp
+            src/database/InitDatabase.cpp
+            src/database/DatabaseManager.cpp
+            src/delete_event/delete_event.cpp
+            src/handle_event/handle_event.cpp
+            src/http/HttpClient.cpp
+            src/http/HttpServer.cpp
+            src/config/event_config.cpp
+            src/event/EventManger.cpp
+            src/event/SendEvent.cpp
+            src/main.cpp )
+
+
+include_directories(${PROJECT_SOURCE_DIR}/src/include)
+
+include_directories(${PROJECT_SOURCE_DIR}/src/database)
+
+include_directories(${PROJECT_SOURCE_DIR}/src/Http)
+include_directories(${PROJECT_SOURCE_DIR}/src/event)
+
+include_directories(${PROJECT_SOURCE_DIR}/src/config)
+
+
+include_directories(${PROJECT_SOURCE_DIR}/libs/event/include)
+include_directories(${PROJECT_SOURCE_DIR}/libs/curl/include)
+include_directories(${PROJECT_SOURCE_DIR}/libs/sqlite3/include)
+include_directories(${PROJECT_SOURCE_DIR}/libs/json/single_include)
+
+target_link_libraries(${PROJECT_NAME} PUBLIC
+    ${CURL_LIBS}
+    ${OpenCV_LIBS}
+    ${EVENT_LIBS}
+    ${SQLITE_LIBS}
+    -lpthread
+)
